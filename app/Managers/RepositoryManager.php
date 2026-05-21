@@ -9,20 +9,26 @@ use App\Repositories\ReservationRepository;
 
 class RepositoryManager
 {
-    public UserRepository $users;
-    public MaterialRepository $materials;
-    public CategoryRepository $categories;
-    public ReservationRepository $reservations;
+    public UserRepository $userRepository;
+    public MaterialRepository $materialRepository;
+    public CategoryRepository $categoryRepository;
+    public ReservationRepository $reservationRepository;
 
+    /**
+     * @param UserRepository $userRepository
+     * @param MaterialRepository $materialRepository
+     * @param CategoryRepository $categoryRepository
+     * @param ReservationRepository $reservationRepository
+     */
     public function __construct(
-        UserRepository $users, 
-        MaterialRepository $materials, 
-        CategoryRepository $categories, 
-        ReservationRepository $reservations)
+        UserRepository $userRepository, 
+        MaterialRepository $materialRepository, 
+        CategoryRepository $categoryRepository, 
+        ReservationRepository $reservationRepository)
     {
-        $this->users = $users;
-        $this->materials = $materials;
-        $this->categories = $categories;
-        $this->reservations = $reservations;
+        $this->userRepository = $userRepository;
+        $this->materialRepository = $materialRepository;
+        $this->categoryRepository = $categoryRepository;
+        $this->reservationRepository = $reservationRepository;
     }
 }

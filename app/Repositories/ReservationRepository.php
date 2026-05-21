@@ -76,11 +76,31 @@ class ReservationRepository
      * @param Reservation $reservation
      * @return int
      */
-    public function save(Reservation $reservation): int
+    public function create(Reservation $reservation): int
     {
         return $this->database->builder()
             ->table('reservations')
             ->insert([
+                'material_id' => $reservation->getMaterial()->getId(),
+                'user_id' => $reservation->getUser()->getId(),
+                'start_date' => $reservation->getStartDate()->format('Y-m-d H:i:s'),
+                'end_date' => $reservation->getEndDate()->format('Y-m-d H:i:s'),
+                'status' => $reservation->getStatus()->value,
+                'created_at' => $reservation->getCreatedAt()->format('Y-m-d H:i:s'),
+                'updated_at' => $reservation->getUpdatedAt()->format('Y-m-d H:i:s')
+            ]);
+    }
+
+    /**
+     * @param Reservation $reservation
+     * @return int
+     */
+    public function update(Reservation $reservation): int
+    {
+        return $this->database->builder()
+            ->table('reservations')
+            ->where('id', '=', $reservation->getId())
+            ->update([
                 'material_id' => $reservation->getMaterial()->getId(),
                 'user_id' => $reservation->getUser()->getId(),
                 'start_date' => $reservation->getStartDate()->format('Y-m-d H:i:s'),

@@ -116,5 +116,24 @@ class Material
     {
         $this->quantityBroken = $quantityBroken;
     }
+
+    /**
+     * @return bool
+     */
+    public function isAvailable(): bool
+    {
+        if($this->getStatus() !== MaterialStatusEnum::AVAILABLE) {
+            return false;
+        }
+
+        $qtyUnavailable = $this->getQuantityBorrowed() + $this->getQuantityBroken();
+        $qtyAvailable = $this->getQuantity() - $qtyUnavailable;
+
+        if($qtyAvailable > 0){
+            return true;
+        }
+
+        return false;
+    }
     
 }

@@ -59,7 +59,7 @@ class MaterialRepository
      * @param Material $material
      * @return int
      */
-    public function save(Material $material): int
+    public function create(Material $material): int
     {
         return $this->database->builder()
             ->table('materials')
