@@ -14,65 +14,107 @@ class Material
     use TimestampableTrait;
     use GeneralTrait;
 
-    public Category $category;
-
-    /**
-     * @var Reservation[]
-     */
-    public array $reservations = [];
-
+    private Category $category;
     private int $quantity = 0;
     private MaterialStatusEnum $status = MaterialStatusEnum::AVAILABLE;
     private int $quantityBorrowed = 0;
     private int $quantityBroken = 0;
 
-    public function __construct(int $id, Category $category, array $reservations = [], string $name = '', string $description = '', ?DateTime $createdAt = null, ?DateTime $updatedAt = null)
+    /**
+     * @param integer $id
+     * @param Category $category
+     * @param string $name
+     * @param string $description
+     * @param DateTime|null $createdAt
+     * @param DateTime|null $updatedAt
+     */
+    public function __construct(int $id, Category $category, string $name = '', string $description = '', ?DateTime $createdAt = null, ?DateTime $updatedAt = null)
     {
         $this->category = $category;
-        $this->reservations = $reservations;
 
         $this->initGeneralTrait($name, $description);
         $this->initIdentifiableTrait($id);
         $this->initTimestampableTrait($createdAt, $updatedAt);
     }
 
+    /**
+     * @return Category
+     */
+    public function getCategory(): Category
+    {
+        return $this->category;
+    }
+
+    /**
+     * @param Category $category
+     */
+    public function setCategory(Category $category): void
+    {
+        $this->category = $category;
+    }
+    
+    /**
+     * @return integer
+     */
     public function getQuantity(): int
     {
         return $this->quantity;
     }
 
+    /**
+     * @param integer $quantity
+     */
     public function setQuantity(int $quantity): void
     {
         $this->quantity = $quantity;
     }
 
+    /**
+     * @return MaterialStatusEnum
+     */
     public function getStatus(): MaterialStatusEnum
     {
         return $this->status;
     }
 
+    /**
+     * @param MaterialStatusEnum $status
+     */
     public function setStatus(MaterialStatusEnum $status): void
     {
         $this->status = $status;
     }
 
+    /**
+     * @return integer
+     */
     public function getQuantityBorrowed(): int
     {
         return $this->quantityBorrowed;
     }
 
+    /**
+     * @param integer $quantityBorrowed
+     */
     public function setQuantityBorrowed(int $quantityBorrowed): void
     {
         $this->quantityBorrowed = $quantityBorrowed;
     }
 
+    /**
+     * @return integer
+     */
     public function getQuantityBroken(): int
     {
         return $this->quantityBroken;
     }
 
+    /**
+     * @param integer $quantityBroken
+     */
     public function setQuantityBroken(int $quantityBroken): void
     {
         $this->quantityBroken = $quantityBroken;
     }
+    
 }

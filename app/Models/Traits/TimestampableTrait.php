@@ -58,10 +58,13 @@ trait TimestampableTrait
     }
 
     /**
-     * @return void
+     * @return DateTime
      */
-    public function updateTime(): void
+    public function updateTime(): DateTime
     {
-        $this->updatedAt = new DateTime();
+        $updatedAt = new DateTime();
+        $this->setUpdatedAt($updatedAt);
+
+        return $updatedAt;
     }
 }

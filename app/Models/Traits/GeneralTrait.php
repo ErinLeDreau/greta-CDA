@@ -17,7 +17,6 @@ trait GeneralTrait
 
     /**
      * @param string $name
-     * @return void
      */
     public function setName(string $name): void
     {
@@ -34,7 +33,6 @@ trait GeneralTrait
 
     /**
      * @param string $description
-     * @return void
      */
     public function setDescription(string $description): void
     {
@@ -44,7 +42,6 @@ trait GeneralTrait
     /**
      * @param string $name
      * @param string $description
-     * @return void
      */
     public function initGeneralTrait(string $name = '', string $description = ''): void
     {

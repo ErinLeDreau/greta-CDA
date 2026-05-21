@@ -13,36 +13,27 @@ class Category
     use IdentifiableTrait;
     use GeneralTrait;
 
-    public function __construct(int $id, array $materials = [], string $name = '', string $description = '', ?DateTime $createdAt = null, ?DateTime $updatedAt = null)
+    public function __construct(int $id, string $name = '', string $description = '', ?DateTime $createdAt = null, ?DateTime $updatedAt = null)
     {
         $this->initGeneralTrait($name, $description);
         $this->initIdentifiableTrait($id);
         $this->initTimestampableTrait($createdAt, $updatedAt);
-        $this->materials = $materials;
 
     }
 
-    /**
-     * @var Material[]
-     */
-    private array $materials = [];
-
-    /**
-     * @return Material[]
-     */
-    public function getMaterials(): array
-    {
-        return $this->materials;
-    }
-
-    /**
-     * @param Material[] $materials
-     * @return self
-     */
-    public function setMaterials(array $materials): self
-    {
-        $this->materials = $materials;
-        return $this;
-    }
     
+    /**
+     * @param array $data
+     * @return Category
+     */
+    public static function fromArray(array $data): Category
+    {
+        return new Category(
+            $data['id'],
+            $data['name'],
+            $data['description'],
+            $data['created_at'] ? new DateTime($data['created_at']) : null,
+            $data['updated_at'] ? new DateTime($data['updated_at']) : null
+        );
+    }
 }
