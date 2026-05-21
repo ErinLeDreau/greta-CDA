@@ -11,6 +11,7 @@ class UserRepository
 {
 
     private Database $database;
+    protected string $table = "users";
 
     /**
      * @param Database $database
@@ -26,7 +27,7 @@ class UserRepository
     public function findById(int $id): ?User
     {
         $data = $this->database->builder()
-            ->table('users')
+            ->table($this->table)
             ->where('id', '=', $id)
             ->first();
 
@@ -40,7 +41,7 @@ class UserRepository
     public function findByEmail(string $email): ?User
     {
         $data = $this->database->builder()
-            ->table('users')
+            ->table($this->table)
             ->where('email', '=', $email)
             ->first();
 
@@ -53,7 +54,7 @@ class UserRepository
     public function findAll(): array
     {
         $rows = $this->database->builder()
-            ->table('users')
+            ->table($this->table)
             ->get();
 
         return array_map(fn($r) => $this->hydrate($r), $rows);
@@ -66,7 +67,7 @@ class UserRepository
     public function create(User $user): User
     {
         $id = $this->database->builder()
-            ->table('users')
+            ->table($this->table)
             ->insert([
                 'firstname' => $user->getFirstname(),
                 'lastname' => $user->getLastname(),
@@ -89,7 +90,7 @@ class UserRepository
     public function update(User $user): int
     {
         return $this->database->builder()
-            ->table('users')
+            ->table($this->table)
             ->where('id', '=', $user->getId())
             ->update([
                 'firstname' => $user->getFirstname(),
@@ -108,7 +109,7 @@ class UserRepository
     public function delete(int $id): int
     {
         return $this->database->builder()
-            ->table('users')
+            ->table($this->table)
             ->where('id', '=', $id)
             ->delete();
     }

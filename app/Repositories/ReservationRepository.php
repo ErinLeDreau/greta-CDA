@@ -13,6 +13,7 @@ class ReservationRepository
     private Database $database;
     private UserRepository $userRepository;
     private MaterialRepository $materialRepository;
+    protected string $table = 'reservations';
 
     /**
      * @param Database $database
@@ -37,7 +38,7 @@ class ReservationRepository
     public function findById(int $id): ?Reservation
     {
         $data = $this->database->builder()
-            ->table('reservations')
+            ->table($this->table)
             ->where('id', '=', $id)
             ->first();
 
@@ -51,7 +52,7 @@ class ReservationRepository
     public function findByUser(int $userId): array
     {
         $rows = $this->database->builder()
-            ->table('reservations')
+            ->table($this->table)
             ->where('user_id', '=', $userId)
             ->get();
 
@@ -65,7 +66,7 @@ class ReservationRepository
     public function findByMaterial(int $materialId): array
     {
         $rows = $this->database->builder()
-            ->table('reservations')
+            ->table($this->table)
             ->where('material_id', '=', $materialId)
             ->get();
 
@@ -79,7 +80,7 @@ class ReservationRepository
     public function create(Reservation $reservation): Reservation
     {
         $id = $this->database->builder()
-            ->table('reservations')
+            ->table($this->table)
             ->insert([
                 'material_id' => $reservation->getMaterial()->getId(),
                 'user_id' => $reservation->getUser()->getId(),
@@ -101,7 +102,7 @@ class ReservationRepository
     public function update(Reservation $reservation): int
     {
         return $this->database->builder()
-            ->table('reservations')
+            ->table($this->table)
             ->where('id', '=', $reservation->getId())
             ->update([
                 'material_id' => $reservation->getMaterial()->getId(),
@@ -121,7 +122,7 @@ class ReservationRepository
     public function delete(int $id): int
     {
         return $this->database->builder()
-            ->table('reservations')
+            ->table($this->table)
             ->where('id', '=', $id)
             ->delete();
     }

@@ -11,6 +11,7 @@ class MaterialRepository
 {
     private Database $database;
     private CategoryRepository $categoryRepository;
+    protected string $table = "materials";
 
     /**
      * @param Database $database
@@ -31,7 +32,7 @@ class MaterialRepository
     public function findById(int $id): ?Material
     {
         $data = $this->database->builder()
-            ->table('materials')
+            ->table($this->table)
             ->where('id', '=', $id)
             ->first();
 
@@ -46,7 +47,7 @@ class MaterialRepository
     public function findAll(): array
     {
         $rows = $this->database->builder()
-            ->table('materials')
+            ->table($this->table)
             ->get();
 
         return array_map(
@@ -62,7 +63,7 @@ class MaterialRepository
     public function create(Material $material): Material
     {
         $id = $this->database->builder()
-            ->table('materials')
+            ->table($this->table)
             ->insert([
                 'category_id' => $material
                     ->getCategory()
@@ -96,7 +97,7 @@ class MaterialRepository
             ]);
         
         $material->setId($id);
-        
+
         return $material;
     }
 
@@ -107,7 +108,7 @@ class MaterialRepository
     public function update(Material $material): int
     {
         return $this->database->builder()
-            ->table('materials')
+            ->table($this->table)
             ->where('id', '=', $material->getId())
             ->update([
                 'category_id' => $material
@@ -145,7 +146,7 @@ class MaterialRepository
     public function delete(int $id): int
     {
         return $this->database->builder()
-            ->table('materials')
+            ->table($this->table)
             ->where('id', '=', $id)
             ->delete();
     }

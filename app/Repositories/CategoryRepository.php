@@ -9,6 +9,7 @@ use DateTime;
 class CategoryRepository
 {
     private Database $database;
+    protected string $table = "categories";
 
     /**
      * @param Database $database
@@ -24,7 +25,7 @@ class CategoryRepository
     public function findById(int $id): ?Category
     {
         $data = $this->database->builder()
-            ->table('categories')
+            ->table($this->table)
             ->where('id', '=', $id)
             ->first();
 
@@ -37,7 +38,7 @@ class CategoryRepository
     public function findAll(): array
     {
         $rows = $this->database->builder()
-            ->table('categories')
+            ->table($this->table)
             ->get();
 
         return array_map(fn($category) => $this->hydrate($category), $rows);
@@ -50,7 +51,7 @@ class CategoryRepository
     public function save(Category $category): Category
     {
         $id = $this->database->builder()
-            ->table('categories')
+            ->table($this->table)
             ->insert([
                 'name' => $category->getName(),
                 'description' => $category->getDescription(),
@@ -69,7 +70,7 @@ class CategoryRepository
     public function update(Category $category): int
     {
         return $this->database->builder()
-            ->table('categories')
+            ->table($this->table)
             ->where('id', '=', $category->getId())
             ->update([
                 'name' => $category->getName(),
@@ -85,7 +86,7 @@ class CategoryRepository
     public function delete(int $id): int
     {
         return $this->database->builder()
-            ->table('categories')
+            ->table($this->table)
             ->where('id', '=', $id)
             ->delete();
     }
