@@ -45,11 +45,11 @@ class CategoryRepository
 
     /**
      * @param Category $category
-     * @return int
+     * @return Category
      */
-    public function save(Category $category): int
+    public function save(Category $category): Category
     {
-        return $this->database->builder()
+        $id = $this->database->builder()
             ->table('categories')
             ->insert([
                 'name' => $category->getName(),
@@ -57,6 +57,9 @@ class CategoryRepository
                 'created_at' => $category->getCreatedAt()->format('Y-m-d H:i:s'),
                 'updated_at' => $category->getUpdatedAt()->format('Y-m-d H:i:s')
             ]);
+        
+        $category->setId($id);
+        return $category;
     }
 
     /**

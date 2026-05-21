@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\DTO\ReservationDTO;
 use App\Managers\RepositoryManager;
 use App\Models\Reservation;
 use App\Models\Enums\ReservationStatusEnum;
@@ -12,10 +13,7 @@ class ReservationService
 {
     private RepositoryManager $repositoryManager;
 
-    /**
-     * @param RepositoryManager $repositoryManager
-     */
-    public function __construct(RepositoryManager $repositoryManager) 
+    public function __construct(RepositoryManager $repositoryManager)
     {
         $this->repositoryManager = $repositoryManager;
     }
@@ -26,14 +24,14 @@ class ReservationService
      * @param DateTime $start
      * @param DateTime $end
      * @throws Exception
-     * @return Reservation
+     * @return ReservationDTO
      */
     public function createReservation(
         int $userId,
         int $materialId,
         DateTime $start,
-        DateTime $end): Reservation 
-    {
+        DateTime $end
+    ): ReservationDTO {
 
         if ($end <= $start) {
             throw new Exception("End date must be after start date");
@@ -63,10 +61,11 @@ class ReservationService
             new DateTime()
         );
 
-        $id = $this->repositoryManager->reservationRepository->create($reservation);
+        $reservation = $this->repositoryManager
+            ->reservationRepository
+            ->create($reservation);
 
-        $reservation->setId($id);
-        return $reservation;
+        return $this->toReservationDTO($reservation);
     }
 
     /**
@@ -77,27 +76,44 @@ class ReservationService
      */
     public function cancelReservation(int $reservationId, int $userId): void
     {
-        $reservation = $this->repositoryManager->reservationRepository->findById($reservationId);
-        $user = $this->repositoryManager->userRepository->findById($userId);
+        $reservation = $this->repositoryManager
+            ->reservationRepository
+            ->findById($reservationId);
+
+        $user = $this->repositoryManager
+            ->userRepository
+            ->findById($userId);
 
         if (!$reservation) {
             throw new Exception("Reservation not found");
         }
 
-        if ($reservation->getUser()->getId() !== $userId || !$user->isAdmin()) {
-            throw new Exception("Unauthorized");
+        if (!$user) {
+            throw new Exception("User not found");
         }
 
         $now = new DateTime();
-        $diff = $now->diff($reservation->getStartDate());
+        $start = $reservation->getStartDate();
+        $isAdmin = $user->isAdmin();
 
-        if ($diff->days < 1 || $now < $reservation->getStartDate()) {
-            throw new Exception("Cannot cancel less than 24h before start");
+        if (!$isAdmin) {
+
+            if ($now >= $start) {
+                throw new Exception("Cannot cancel a reservation that has already started");
+            }
+
+            $diffSeconds = $start->getTimestamp() - $now->getTimestamp();
+
+            if ($diffSeconds < 86400) {
+                throw new Exception("Cannot cancel less than 24h before start");
+            }
         }
 
         $reservation->setStatus(ReservationStatusEnum::CANCELLED);
 
-        $this->repositoryManager->reservationRepository->update($reservation);
+        $this->repositoryManager
+            ->reservationRepository
+            ->update($reservation);
     }
 
     /**
@@ -109,16 +125,9 @@ class ReservationService
      */
     private function checkConflicts(int $materialId, DateTime $start, DateTime $end): void
     {
-        $material = $this->repositoryManager->materialRepository->findById($materialId);
-
-        if (!$material) {
-            throw new Exception("Material doesn't exist");
-        }
-
-        if (!$material->isAvailable()){
-            throw new Exception("Material is not available");
-        }
-        $reservations = $this->repositoryManager->reservationRepository->findByMaterial($materialId);
+        $reservations = $this->repositoryManager
+            ->reservationRepository
+            ->findByMaterial($materialId);
 
         foreach ($reservations as $reservation) {
 
@@ -126,12 +135,30 @@ class ReservationService
             $existingEnd = $reservation->getEndDate();
 
             $isOverlap =
-                $start < $existingEnd ||
-                $end > $existingStart;
+                $start < $existingEnd
+                && $end > $existingStart;
 
             if ($isOverlap) {
                 throw new Exception("Material already reserved for this time slot");
             }
         }
+    }
+
+    /**
+     * @param Reservation $r
+     * @return ReservationDTO
+     */
+    private function toReservationDTO(Reservation $r): ReservationDTO
+    {
+        return new ReservationDTO(
+            $r->getId(),
+            $r->getUser()->getId(),
+            $r->getMaterial()->getId(),
+            $r->getStartDate()->format('Y-m-d H:i:s'),
+            $r->getEndDate()->format('Y-m-d H:i:s'),
+            $r->getStatus()->value,
+            $r->getCreatedAt()->format('Y-m-d H:i:s'),
+            $r->getUpdatedAt()->format('Y-m-d H:i:s')
+        );
     }
 }

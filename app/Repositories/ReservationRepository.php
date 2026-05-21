@@ -74,11 +74,11 @@ class ReservationRepository
 
     /**
      * @param Reservation $reservation
-     * @return int
+     * @return Reservation
      */
-    public function create(Reservation $reservation): int
+    public function create(Reservation $reservation): Reservation
     {
-        return $this->database->builder()
+        $id = $this->database->builder()
             ->table('reservations')
             ->insert([
                 'material_id' => $reservation->getMaterial()->getId(),
@@ -89,6 +89,9 @@ class ReservationRepository
                 'created_at' => $reservation->getCreatedAt()->format('Y-m-d H:i:s'),
                 'updated_at' => $reservation->getUpdatedAt()->format('Y-m-d H:i:s')
             ]);
+        
+        $reservation->setId($id);
+        return $reservation;
     }
 
     /**

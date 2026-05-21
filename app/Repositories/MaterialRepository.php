@@ -57,11 +57,11 @@ class MaterialRepository
 
     /**
      * @param Material $material
-     * @return int
+     * @return Material
      */
-    public function create(Material $material): int
+    public function create(Material $material): Material
     {
-        return $this->database->builder()
+        $id = $this->database->builder()
             ->table('materials')
             ->insert([
                 'category_id' => $material
@@ -94,6 +94,10 @@ class MaterialRepository
                     ->getUpdatedAt()
                     ->format('Y-m-d H:i:s')
             ]);
+        
+        $material->setId($id);
+        
+        return $material;
     }
 
     /**

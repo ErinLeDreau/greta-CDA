@@ -12,10 +12,17 @@ class UserRepository
 
     private Database $database;
 
+    /**
+     * @param Database $database
+     */
     public function __construct(Database $database) {
         $this->database = $database;
     }
 
+    /**
+     * @param int $id
+     * @return User|null
+     */
     public function findById(int $id): ?User
     {
         $data = $this->database->builder()
@@ -26,6 +33,10 @@ class UserRepository
         return $data ? $this->hydrate($data) : null;
     }
 
+    /**
+     * @param string $email
+     * @return User|null
+     */
     public function findByEmail(string $email): ?User
     {
         $data = $this->database->builder()
@@ -36,6 +47,9 @@ class UserRepository
         return $data ? $this->hydrate($data) : null;
     }
 
+    /**
+     * @return User[]
+     */
     public function findAll(): array
     {
         $rows = $this->database->builder()
@@ -45,9 +59,13 @@ class UserRepository
         return array_map(fn($r) => $this->hydrate($r), $rows);
     }
 
-    public function save(User $user): int
+    /**
+     * @param User $user
+     * @return User
+     */
+    public function create(User $user): User
     {
-        return $this->database->builder()
+        $id = $this->database->builder()
             ->table('users')
             ->insert([
                 'firstname' => $user->getFirstname(),
@@ -58,8 +76,16 @@ class UserRepository
                 'created_at' => $user->getCreatedAt()->format('Y-m-d H:i:s'),
                 'updated_at' => $user->getUpdatedAt()->format('Y-m-d H:i:s')
             ]);
+
+        $user->setId($id);
+
+        return $user;
     }
 
+    /**
+     * @param User $user
+     * @return int
+     */
     public function update(User $user): int
     {
         return $this->database->builder()
@@ -75,6 +101,10 @@ class UserRepository
             ]);
     }
 
+    /**
+     * @param int $id
+     * @return int
+     */
     public function delete(int $id): int
     {
         return $this->database->builder()
@@ -83,6 +113,10 @@ class UserRepository
             ->delete();
     }
 
+    /**
+     * @param array $data
+     * @return User
+     */
     private function hydrate(array $data): User
     {
         return new User(
