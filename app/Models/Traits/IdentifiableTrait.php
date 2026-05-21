@@ -18,7 +18,7 @@ trait IdentifiableTrait
     }
 
     /**
-     * @param integer $id
+     * @param int $id
      */
     public function setId(int $id): void
     {

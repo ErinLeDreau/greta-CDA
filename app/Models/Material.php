@@ -21,7 +21,7 @@ class Material
     private int $quantityBroken = 0;
 
     /**
-     * @param integer $id
+     * @param int $id
      * @param Category $category
      * @param string $name
      * @param string $description
@@ -54,7 +54,7 @@ class Material
     }
     
     /**
-     * @return integer
+     * @return int
      */
     public function getQuantity(): int
     {
@@ -62,7 +62,7 @@ class Material
     }
 
     /**
-     * @param integer $quantity
+     * @param int $quantity
      */
     public function setQuantity(int $quantity): void
     {
@@ -86,7 +86,7 @@ class Material
     }
 
     /**
-     * @return integer
+     * @return int
      */
     public function getQuantityBorrowed(): int
     {
@@ -94,7 +94,7 @@ class Material
     }
 
     /**
-     * @param integer $quantityBorrowed
+     * @param int $quantityBorrowed
      */
     public function setQuantityBorrowed(int $quantityBorrowed): void
     {
@@ -102,7 +102,7 @@ class Material
     }
 
     /**
-     * @return integer
+     * @return int
      */
     public function getQuantityBroken(): int
     {
@@ -110,7 +110,7 @@ class Material
     }
 
     /**
-     * @param integer $quantityBroken
+     * @param int $quantityBroken
      */
     public function setQuantityBroken(int $quantityBroken): void
     {

@@ -20,7 +20,7 @@ class User
     private UserRoleEnum $role;
 
     /**
-     * @param integer $id
+     * @param int $id
      * @param string $firstName
      * @param string $lastName
      * @param string $email

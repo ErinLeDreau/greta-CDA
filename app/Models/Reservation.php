@@ -19,7 +19,7 @@ class Reservation
     private Material $material;
 
     /**
-     * @param integer $id
+     * @param int $id
      * @param User $user
      * @param Material $material
      * @param DateTime $startDate
