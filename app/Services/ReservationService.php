@@ -91,7 +91,7 @@ class ReservationService
         $now = new DateTime();
         $diff = $now->diff($reservation->getStartDate());
 
-        if ($diff->days < 1 && $now < $reservation->getStartDate()) {
+        if ($diff->days < 1 || $now < $reservation->getStartDate()) {
             throw new Exception("Cannot cancel less than 24h before start");
         }
 
