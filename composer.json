@@ -1,0 +1,8 @@
+{
+  "name": "app/greta-cda",
+  "autoload": {
+    "psr-4": {
+      "App\\": "src/"
+    }
+  }
+}
